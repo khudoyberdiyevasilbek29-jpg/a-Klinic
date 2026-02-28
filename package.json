@@ -1,0 +1,36 @@
+{
+  "name": "a-klinic",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "bcryptjs": "^2.4.3",
+    "classnames": "^2.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "next": "14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "22.7.4",
+    "@types/react": "18.3.8",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "prisma": "^5.14.0",
+    "tailwindcss": "^3.4.13",
+    "typescript": "5.6.3",
+    "eslint": "9.11.1",
+    "eslint-config-next": "14.2.5"
+  }
+}

@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  RECEPTION
+  DOCTOR
+  ADMIN
+}
+
+enum VisitStatus {
+  WAITING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  doctor       Doctor?
+  createdAt    DateTime @default(now())
+}
+
+model Patient {
+  id        Int      @id @default(autoincrement())
+  fullName  String
+  phone     String   @unique
+  visits    Visit[]
+  createdAt DateTime @default(now())
+}
+
+model Doctor {
+  id        Int      @id @default(autoincrement())
+  name      String
+  specialty String?
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  visits    Visit[]
+  createdAt DateTime @default(now())
+}
+
+model Service {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  price       Int
+  active      Boolean     @default(true)
+  visits      Visit[]
+  treatments  Treatment[] @relation("TreatmentServices")
+  createdAt   DateTime    @default(now())
+}
+
+model Visit {
+  id            Int           @id @default(autoincrement())
+  patientId     Int
+  patient       Patient       @relation(fields: [patientId], references: [id])
+  doctorId      Int?
+  doctor        Doctor?       @relation(fields: [doctorId], references: [id])
+  serviceId     Int?
+  service       Service?      @relation(fields: [serviceId], references: [id])
+  status        VisitStatus   @default(WAITING)
+  queueNumber   Int
+  bookedOnline  Boolean       @default(false)
+  scheduledAt   DateTime?
+  checkInAt     DateTime      @default(now())
+  diagnosis     String?
+  treatmentNotes String?
+  followUpDate  DateTime?
+  treatments    Treatment[]
+  payment       Payment?
+  createdAt     DateTime      @default(now())
+}
+
+model Treatment {
+  id          Int       @id @default(autoincrement())
+  visitId     Int
+  visit       Visit     @relation(fields: [visitId], references: [id])
+  description String
+  services    Service[] @relation("TreatmentServices")
+  createdAt   DateTime  @default(now())
+}
+
+model Payment {
+  id        Int           @id @default(autoincrement())
+  visitId   Int           @unique
+  visit     Visit         @relation(fields: [visitId], references: [id])
+  amount    Int
+  status    PaymentStatus @default(UNPAID)
+  createdAt DateTime      @default(now())
+}
+
